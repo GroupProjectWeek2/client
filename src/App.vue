@@ -19,30 +19,52 @@ export default {
     },
     methods: {
         favoriteimage(){
-            // axios({
-            //         url: `${this.baseUrl}/images`,
-            //         method: 'get',
-            //         headers: {
-            //             token: localStorage.getItem('token')
-            //         }
-            // })
-            // .then(response => {
-            //     this.images = response.data
-            //     this.page = 2
-            // })
-            // .catch(err => {
-            //     if(err.response){
-            //         this.error = err.response.data.message
-            //     }else if(err.request){
-            //         this.errorMessage = `500 Internal Server Error`
-            //     }else {
-            //         console.log(err.message)
-            //     }
-            // })
+            
+            axios({
+                    url: `${this.baseUrl}/users/fav`,
+                    method: 'get',
+                    headers: {
+                        token: localStorage.getItem('token')
+                    }
+            })
+            .then(response => {
+                this.images = response.data
+                
+          
+            })
+            .catch(err => {
+                if(err.response){
+                    this.error = err.response.data.message
+                }else if(err.request){
+                    this.errorMessage = `500 Internal Server Error`
+                }else {
+                    console.log(err.message)
+                }
+            })
         },
         registerimage(value){
-
             console.log(value)
+            axios({
+                url: `${this.baseUrl}/images`,
+                method: "post",
+                headers: {
+                    token: localStorage.getItem('token')
+                },
+                data: value
+            })
+            .then(response=>{
+                this.fetchImages()
+            })
+            .catch(err =>{
+                console.log(err)
+                if(err.response){
+                    this.error = err.response.data.message
+                }else if(err.request){
+                    this.errorMessage = `500 Internal Server Error`
+                }else {
+                    console.log(err.message)
+                }
+            })
         },
         likethis(_id){
             axios({
@@ -53,7 +75,6 @@ export default {
                     }
             })
             .then(response => {
-                alert('sukses like')
                 this.fetchImages()
                 
             })
@@ -86,7 +107,6 @@ export default {
             .then(response => {
                 this.images = response.data
                 this.page = 2
-                console.log(this.images)
             })
             .catch(err => {
                 if(err.response){
@@ -99,30 +119,41 @@ export default {
             })
         },
         searchImage(tag){
-            axios({
-                url: `${this.baseUrl}/images/search/${tag}`,
-                method: 'get',
-                headers: {
-                token: localStorage.getItem('token')
-            }
-            })
-            .then(response => {
-                this.images = response.data
-            })
-            .catch(err => {
-                if(err.response){
-                    this.error = err.response.data.message
-                }else if(err.request){
-                    this.errorMessage = `500 Internal Server Error`
-                }else {
-                    console.log(err.message)
+            if(tag===""){
+                this.fetchImages()
+            }else{
+                axios({
+                    url: `${this.baseUrl}/images/search/${tag}`,
+                    method: 'get',
+                    headers: {
+                    token: localStorage.getItem('token')
                 }
-            })
+                })
+                .then(response => {
+                    this.images = response.data
+                })
+                .catch(err => {
+                    if(err.response){
+                        this.error = err.response.data.message
+                    }else if(err.request){
+                        this.errorMessage = `500 Internal Server Error`
+                    }else {
+                        console.log(err.message)
+                    }
+                })
+            }
         }
     },
     components: {
         firstpage,
         secondpage
+    },
+    created: function(){
+        if(!localStorage.getItem('token')){
+            this.page = 1;
+        }else{
+            this.fetchImages()
+        }
     }
 
 }

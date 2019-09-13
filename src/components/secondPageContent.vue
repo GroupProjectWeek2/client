@@ -10,6 +10,7 @@
                 <div class="uploadfile" style="display: flex; justify-content: center;margin-top:3vh;">
                     <h4 >Upload your image here</h4>
                     <form action="" enctype="multipart/form-data">
+                        <input type="text" v-model="imagetitle" placeholder="Image title">
                         <input
                             type="file"
                             ref="image"
@@ -69,6 +70,7 @@ export default {
     props: ['images'],
     data: function(){
         return {
+            imagetitle: "",
             search: "",
             showimage: false,
             url: "",
@@ -81,11 +83,12 @@ export default {
     props:['images'],
     methods: {
         registerimage(){
-
             document.getElementById('uploadbtn').innerHTML = "Loading..."
             let formData = new FormData()
+            formData.append('title', this.imagetitle)
             formData.append('image', this.image)
-            this.$emit('registerimage', this.image)
+            this.$emit('registerimage', formData)
+            this.imagetitle = ""
         },
         handleimage(){
    

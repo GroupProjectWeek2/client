@@ -23,7 +23,6 @@ export default {
             this.$emit('likethis', _id)
         },
         favoriteimage(){
-
             this.$emit('favoriteimage')
         },
         logout(){
