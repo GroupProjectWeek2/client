@@ -82,7 +82,6 @@ export default {
     methods: {
     
         registerimage(){
-            document.getElementById('uploadbtn').innerHTML = "Loading..."
             let formData = new FormData()
             formData.append('title', this.imagetitle)
             formData.append('image', this.image)

@@ -43,7 +43,7 @@ export default {
             })
         },
         registerimage(value){
-            console.log(value)
+            Swal.showLoading()
             axios({
                 url: `${this.baseUrl}/images`,
                 method: "post",
@@ -53,12 +53,19 @@ export default {
                 data: value
             })
             .then(response=>{
+                Swal.close()
+                Swal.fire(
+                    'Your image is uploaded'
+                )
                 this.fetchImages()
             })
             .catch(err =>{
-                console.log(err)
+                Swal.close()
                 if(err.response){
                     this.error = err.response.data.message
+                    Swal.fire(
+                        `${this.error}`
+                    )
                 }else if(err.request){
                     this.errorMessage = `500 Internal Server Error`
                 }else {
@@ -75,6 +82,7 @@ export default {
                     }
             })
             .then(response => {
+                
                 this.fetchImages()
                 
             })
@@ -109,7 +117,8 @@ export default {
                 this.page = 2
             })
             .catch(err => {
-                if(err.response){
+                if(err.response){ 
+                    this.page = 1
                     this.error = err.response.data.message
                 }else if(err.request){
                     this.errorMessage = `500 Internal Server Error`
