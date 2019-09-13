@@ -1,21 +1,22 @@
 <template>
     <div>
         <h1>Sign in.</h1>
-        <p v-bind:style="{visibility: errorShow}">{{error}}</p>
+        <div id="errorPosition">
+            <p v-bind:style="{visibility: errorShow}">{{error}}</p>
+        </div>
         <form action="">
-            <input v-model="email" type="email" placeholder="Email">
-            <input v-model="password" type="password" placeholder="Password">
+            <input v-on:keyup.enter="login" v-model="email" type="email" placeholder="Email">
+            <input v-on:keyup.enter="login" v-model="password" type="password" placeholder="Password">
             <button v-if="loading === false" @click.prevent="login" type="submit">Sign in</button>
             <button v-else type="submit"><i class="fas fa-spinner fa-pulse"></i></button>
             
         </form>
-        <div class="g-signin2" data-onsuccess="onSignIn"></div>
+        <!-- <div class="g-signin2" data-onsuccess="onSignIn"></div> -->
         
     </div>
 </template>
 
 <script>
-
 import axios from 'axios'
 export default {
     data: function(){
@@ -40,8 +41,13 @@ export default {
                 }
             })
             .then(response =>{
-                localStorage('token', response.data.token)
+                localStorage.setItem('token', response.data.token)
                 this.loading = false
+                this.errorShow = "hidden"
+                this.errorMessage = ""
+                this.email = ""
+                this.password = ""
+                this.$emit('fetchimage')
 
             })
             .catch(err => {
@@ -62,6 +68,13 @@ export default {
 </script>
 
 <style scoped>
+    #errorPosition{
+        height: 8vh; 
+        display:flex; 
+        justify-items: start;
+        align-items: flex-end;
+        
+    }
     form{
         display: flex;
         flex-direction: column;
@@ -70,7 +83,9 @@ export default {
         font-family: 'Roboto', sans-serif;
         color: red;
         padding: 5px;
-        height: 8vh;
+        position: relative;
+        bottom: 0px;
+        left: 0px;
         word-wrap:break-word;
         width: 100%;
         margin: 0px;
@@ -85,6 +100,7 @@ export default {
         margin-bottom: 1.5vh;
     }
     input {
+        font-family: 'Roboto', sans-serif; 
         padding-left: 1vw;
     }
     button {
@@ -107,3 +123,5 @@ export default {
         width: 25vw;
     }
 </style>
+
+
