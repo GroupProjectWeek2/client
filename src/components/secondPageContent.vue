@@ -48,13 +48,10 @@
                     <div style="display: flex; flex-direction: column; justify-content: center;">
                         <h1>{{title}}</h1>
                         <div>
-                            <a href="" @click.prevent="likethis()"><h4>like this.</h4></a>
+                            <a href="" @click.prevent="likethis()">like this.</a>               
                         </div>
                         <div id="sharecolumn">
-                            <div class="fb-share-button" 
-                                data-href="https://www.your-domain.com/your-page.html" 
-                                data-layout="button_count">
-                            </div>
+                            <a v-bind:href="link" data-action="share/whatsapp/share">Share via Whatsapp</a>
                         </div>
                        
                     </div>
@@ -77,11 +74,13 @@ export default {
             title: "",
             filepath: "",
             _id: null,
-            image: null
+            image: null,
+            link: "whatsapp://send?text="
         }
     },
     props:['images'],
     methods: {
+    
         registerimage(){
             document.getElementById('uploadbtn').innerHTML = "Loading..."
             let formData = new FormData()
@@ -104,9 +103,11 @@ export default {
             this.url = url
             this.title = title
             this._id = _id
+            this.link += url
             this.showimage = true
         },
         closepoppingimage(){
+            this.link = "whatsapp://send?text="
             this.showimage = false
         },
         searchImage(){
@@ -117,6 +118,14 @@ export default {
 </script>
 
 <style scoped>
+    #itemdescription a{
+        text-decoration: none;
+        font-family: 'Roboto', sans-serif;
+        color: black
+    }
+    #itemdescription a:hover {
+        border-bottom: 1px solid black;
+    }
     #sharecolumn {
         display: flex;
         justify-content: space-evenly;
